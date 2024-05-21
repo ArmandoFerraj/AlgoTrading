@@ -1,0 +1,48 @@
+Motivation:
+There are a  plethora of crypto communities on discord that give out daily trading signals for their members. The goal of this bot is to use those trading signals to automate trades
+
+Architecture:
+- This project uses a microservices architecture.
+- Server.py is the host, DiscordScraper.py and main.py are the clients
+- Server.py uses fastapi to run a local server. This server acts like a data base. It receives messages from discord and sends messages to our trading bot.
+- DiscordScraper.py uses the discord library to connect to discord. It continuously listens for messages and sends POST requests to our server.
+- Main.py will retrieve the trading signals and automate trades on the Coinbase platform.
+    
+    
+
+TODO:
+
+-  We need to think about how we want to manage our messages.
+
+    - RIGHT NOW:  Server is initialized with an empty list. Every time discordscraper posts a message to the server that message gets appended to our list. Every time main requests a message, the server will send the current state of the list. However, that list of messages empties out all of its elements after that get request. This ensures main is only getting unique messages every time it makes a request. The plan is to append those incoming messages into a list called signals inside of main and from there we can parse the messages for trading signals.
+
+    - Do we even want to keep our messages in main?
+        - perhaps it would be easier to just leave all the messages in server and keep appending them in there like a true database or should we just leave the server alone so that it's only purpose is to send and receive messages?
+
+- Where do we want to parse the data?
+    - If we bring the messages into main then that means we would have to do our data processing in main else we do the data processing in the server and send over pure trading signals
+
+- Need to define what a trading signal is
+    - e.g. signal( currency, entering price, long or short position, etc..)
+
+- main needs to have a state machine with some logic:
+    - Buy state: looking at signals and have some logic and how to enter a trade
+    - Sell state: looking at our position have some logic on when to exit 
+
+
+-  Need to figure out how to place orders
+    - Coinbasetest.py shows us how to sign in however we will need to learn the functionality behind entering and exiting positions
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
