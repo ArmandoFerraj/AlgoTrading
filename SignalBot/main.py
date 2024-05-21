@@ -1,7 +1,5 @@
-import DontShare as cb
-import ccxt
 import requests
-import re
+
 
 signals = []
 url = 'http://localhost:8000/getmessage/'
