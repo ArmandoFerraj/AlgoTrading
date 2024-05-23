@@ -1,16 +1,33 @@
 import requests
 
-
-signals = []
 url = 'http://localhost:8000/getmessage/'
-
-def get_messages(url):
+signals = []
+    
+def process_messages(message): #classifies each element as a trading signal or not, returns a list of all trading signals
+    print("we got signals!")
+    return message
+      
+def get_messages(url): #gets response from the server and processes all messages
     response = requests.get(url)
-    return response.text
- 
+    if response.status_code == 200:
+        incoming_message = response.json()
+        return process_messages(incoming_message)
+    
+    elif response.status_code == 204:
+        print("No new messages")
+        return None
+    else:
+        print(f"Failed to fetch messages, status code: {response.status_code}")
+        return None
+
+def append_signal(signal_list, new_list):
+    if new_list:
+            signal_list.extend(new_list)
+    
 while True:
-    print(type(get_messages(url)))
-    print(get_messages(url))
+    incoming_signals = get_messages(url)
+    append_signal(signals, incoming_signals)
+
 
 
 
