@@ -8,33 +8,23 @@ Architecture:
 - Main.py will send get GET requests to retrieve signals and use them to enter trades on Coinbase 
     
 Functionality:
-- discordscraper sends an object, a list of strings, to the server. The server takes each element and adds it to a new list that lives in the server. Every time main makes a get request, the server sends over its current list and then empties the list so it does not ever send duplicate messages. The object from the get request will then undergo message processing. The process message function will decide which message or element in the list is a trading signal. Finally we then append each signal to our list of signals. The idea here is that the bot will constantly accumulate signals and refer to this list of signals for a entry position.
+- discordscraper sends a list of strings to the server. 
+- The server takes each element and adds it to a new list that lives in the server. 
+- Every time main makes a GET request, the server sends over its current list and then empties it so it does not send duplicates.
+- Then the process message function will take that list and decide which element, or message, is a trading signal and discard the rest
+- Finally we append each processed message to our list of signals. 
+- The idea here is that the bot will accumulate signals over time and refer to this list when it needs to enter a position.
 
 TODO:
 
-- Need to define what a trading signal is
-    - what parameters define a signal? a signal should have a ticker, long or short position, etc ...
+- Need to define what a trading signal is:
+    - what parameters define a signal? a signal should have a ticker, position type ie long or short, ...
     - after defining that we can finish the process message function ie create an algorithm to classify whether messages are trading signals or not 
 
 - main needs to have a state machine:
-    - Idle state (?)
     - Buy state: looks at our signals and have some kind of logic to enter a position. 
     - Sell state: looks at our position have some logic on when to exit
+    - Idle state (?)
 
 -  Need to figure out how to place orders
     - Coinbasetest.py shows us how to sign in however we will need to learn the functionality behind entering and exiting positions
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
