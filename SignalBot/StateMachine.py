@@ -19,7 +19,6 @@ class Statemachine:
             if signal_list:
                 signal = signal_list.pop(0)# takes first signal from the list
                 self.enter_position(signal) 
-                return 
             else:
                 print("no signals yet")
         elif self.state == STATE_SELL:
