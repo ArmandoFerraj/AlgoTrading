@@ -1,30 +1,55 @@
 Motivation:
 There are a plethora of crytpo communities on discord that give out daily trading signals for their members. The goal of this bot is to use those trading signals to automate trades
 
+Goals:
+1.) automate trades with discord signals and start making profits
+2.) scale the project up to have a database - the idea here is to share the database with people. more signals = more profit
+
 Architecture:
-- This project uses a microservices architecture where server.py is the host, DiscordScraper.py and main.py are the clients
-- Server.py uses fastapi to run a local server. This server acts like a data base. It receives messages from discord and sends messages to our trading bot.
-- DiscordScraper.py allows our discord bot to continuously listen for messages and send POST requests to our server.
-- Main.py will send get GET requests to retrieve signals and use them to enter trades on Coinbase 
-    
-Functionality:
-- discordscraper sends a list of strings to the server. 
-- The server takes each element and adds it to a new list that lives in the server. 
-- Every time main makes a GET request, the server sends over its current list and then empties it so it does not send duplicates.
-- Then the process message function will take that list and decide which element, or message, is a trading signal and discard the rest
-- Finally we append each processed message to our list of signals. 
-- The idea here is that the bot will accumulate signals over time and refer to this list when it needs to enter a position.
+---goal 1---:
+- uses a microservices architecture 
+- server.py is the host, discordscraper.py and main.py are the clients
+- discordscraper connects the discord bot (via a token) to the crypto channel. Here it listens to messages and sends POST requests to the server.
+- server saves messages in a list
+- main makes GET requests, then uses the process message function to filter noise and trading signal
+- main uses the signals to automate trading
+
+        ---goal 2---:
+        - uses microservices architecture and a database
+        - discord scraper sends messages to fast api, fast api processes the messages then sends trading signals to the database
+        - The database is its own server that is hosted on the internet
+        - main program connects to the databases, retrieves trading signals and starts trading!
+        - Therefore anyone who wants to trade does not need the discord bot or the fast api files
+        - all they need is connection to the database and they can start making money!
+        - however anyone can utilize discordscraper, use their own token, and contribute to the database
+
+
+
 
 TODO:
-
 - Need to define what a trading signal is:
-    - what parameters define a signal? a signal should have a ticker, position type ie long or short, ...
-    - after defining that we can finish the process message function ie create an algorithm to classify whether messages are trading signals or not 
+    - what parameters define a signal? 
+    - a signal should have a ticker, position type (long or short), anything else?
+    - decide what data structure we want trading signals to be, e.g. a dictionary? {ticker:"btc", pos:"long", ...}
+    
+- finish the process message function
+    - create an algorithm to classify whether incoming messages are trading signals or noise
 
-- main needs to have a state machine:
-    - Buy state: looks at our signals and have some kind of logic to enter a position. 
-    - Sell state: looks at our position have some logic on when to exit
-    - Idle state (?)
+- Need to figure out how to place orders
+    - for long/shorts write functions to enter and exit positions on coing base
+    - verify they work as intended
 
--  Need to figure out how to place orders
-    - Coinbasetest.py shows us how to sign in however we will need to learn the functionality behind entering and exiting positions
+- Need to work on the state machine logic and functionality
+    - Define an entrance/exit strategy
+            - trading signals tell us what to do BUT how much do we risk per trade? 
+            - e.g. we can define each trade as 1 unit, where 1 unit can be x% of our portfolio 
+            - when do we take the lost and exit?
+            - when do we take profit and exit?
+            - verify you can place orders inside of the state machine
+    - need robust saftey protocols 
+        - disconnections to the server might break our code
+        - perahps design a kill switch that exits all positions and stops trading
+        - etc...
+    
+
+
