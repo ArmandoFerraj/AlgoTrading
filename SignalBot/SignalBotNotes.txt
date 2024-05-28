@@ -3,7 +3,7 @@ There are a plethora of crytpo communities on discord that give out daily tradin
 
 Goals:
 1.) automate trades with discord signals and start making profits
-2.) scale the project up to have a database - the idea here is to share the database with people. more signals = more profit
+2.) scale the project up to have a database - the idea here is to share the database with people
 
 Architecture:
 ---goal 1---:
@@ -27,29 +27,33 @@ Architecture:
 
 
 TODO:
-- Need to define what a trading signal is:
-    - what parameters define a signal? 
-    - a signal should have a ticker, position type (long or short), anything else?
-    - decide what data structure we want trading signals to be, e.g. a dictionary? {ticker:"btc", pos:"long", ...}
+
+- Need to define what a trading signal is: 
+    - trading signal should be a dictionatry e.g. {ticker:"btc", pos:"long", ...}
     
-- finish the process message function
+- finish the process message function:
+    - the function takes a string as input (messages) and outputs a dictionary or none (trading signal or noise)
     - create an algorithm to classify whether incoming messages are trading signals or noise
 
-- Need to figure out how to place orders
-    - for long/shorts write functions to enter and exit positions on coing base
-    - verify they work as intended
+- finish the coinbase_buy and coinbase_sell functions 
+    - logic mainly there need to finalize the actual functions
+    - probably easier once we finish process message function
+    - verify we can place orders inside of the state machine
 
-- Need to work on the state machine logic and functionality
-    - Define an entrance/exit strategy
-            - trading signals tell us what to do BUT how much do we risk per trade? 
-            - e.g. we can define each trade as 1 unit, where 1 unit can be x% of our portfolio 
-            - when do we take the lost and exit?
-            - when do we take profit and exit?
-            - verify you can place orders inside of the state machine
-    - need robust saftey protocols 
-        - disconnections to the server might break our code
-        - perahps design a kill switch that exits all positions and stops trading
-        - etc...
-    
+- need robust saftey protocols
+    - confirmation orders filled for buy and coinbase_sell
+    - server disconnections may break code 
+
+- figure out git stuff
+
+** lets implement this later we can use our current approach for the time being **
+
+- Need to get a database:
+    - use postgreSQL find out how to get it
+    - find out how to host a database online and locally for testing
+    - find out how to send data to a data base 
+    - find out how to hold and manage data in a database
+    - find out how to extract data from a database
+    - get data from discord -> fast api -> process message -> database -> main
 
 
